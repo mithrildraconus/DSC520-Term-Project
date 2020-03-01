@@ -1,0 +1,76 @@
+---
+title: "DSC530 Term Project"
+author: "A. Kendell Davis"
+date: "2/29/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Preliminary Data preparation
+All of the following code is designed in preparation to create the results supplied in my EDA
+
+```{r Leisure.data}
+library(tidyverse)
+Leisure.data$Year <- as.factor(Leisure.data$Year)
+leisure2010 <- Leisure.data[Leisure.data$Year == "2010", ]
+leisure2011 <- Leisure.data[Leisure.data$Year == "2011", ]
+leisure2012 <- Leisure.data[Leisure.data$Year == "2012", ]
+leisure2013 <- Leisure.data[Leisure.data$Year == "2013", ]
+leisure2014 <- Leisure.data[Leisure.data$Year == "2014", ]
+leisure2015 <- Leisure.data[Leisure.data$Year == "2015", ]
+leisure2016 <- Leisure.data[Leisure.data$Year == "2016", ]
+leisure2017 <- Leisure.data[Leisure.data$Year == "2017", ]
+leisure2018 <- Leisure.data[Leisure.data$Year == "2018", ]
+leisure_once_year <- Leisure.data[Leisure.data$Frequency == "Participated in the last 12 months", ]
+leisure_multi_week <- Leisure.data[Leisure.data$Frequency == "Weekly Participation (multiple)", ]
+leisure_once_week <- Leisure.data[Leisure.data$Frequency == "Weekly Participation (once)", ]
+leisure_multi_month <- Leisure.data[Leisure.data$Frequency == "Monthly Participation (multiple)", ]
+leisure_once_month <- Leisure.data[Leisure.data$Frequency == "Monthly Participation (once)", ]
+leisure_activity <- distinct(Leisure.data, Activity, .keep_all = TRUE)
+FrequencyLevel <- c("Participated in the last 12 months","Weekly Participation (multiple)", "Weekly Participation (once)", "Monthly Participation (multiple)", "Monthly Participation (once)")
+```
+## Histogram Plots
+All of the following code is designed to create the histogram plots required for my EDA
+
+```{r}
+ggplot(data = leisure2010, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2010") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2011, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2011") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2012, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2012") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2013, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2013") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2014, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2014") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2015, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2015") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2016, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2016") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2017, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2017") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure2018, aes(x = Frequency, y = Percentage)) + geom_col(aes(fill = Activity), position = "dodge") + scale_x_discrete(limits = FrequencyLevel) + labs(title = "Leisure Activities for 2018") + guides(fill = "none") + geom_vline(xintercept = 1.5)
+ggplot(data = leisure_activity, aes(x = Locality)) + geom_histogram(stat = "count")
+ggplot(data = leisure_once_year, aes(x = Percentage)) + geom_histogram(binwidth = 1) + labs(title = "Leisure Activities Participated in the Last 12 Months")
+ggplot(data = leisure_multi_week, aes(x = Percentage)) + geom_histogram(binwidth = 1) + labs(title = "Leisure Activities Participated in 2+ Times per Week")
+ggplot(data = leisure_once_week, aes(x = Percentage)) + geom_histogram(binwidth = 1) + labs(title = "Leisure Activities Participated in 1 Time per Week")
+ggplot(data = leisure_multi_month, aes(x = Percentage)) + geom_histogram(binwidth = 1) + labs(title = "Leisure Activities Participated in 2-3 Times per Month")
+ggplot(data = leisure_once_month, aes(x = Percentage)) + geom_histogram(binwidth = 1) + labs(title = "Leisure Activities Participated in 1 Time per Month")
+```
+## Analytical Plots
+All of the following code is designed to create the plots designed for visual analytics required for my EDA (PMF, CDF, analytical distribution, etc.)
+
+```{r}
+ggplot(data = Leisure.data, aes(x = Frequency)) + geom_bar(aes(fill = Locality, weight = Percentage), position = "dodge") + scale_x_discrete(limits = FrequencyLevel, labels = function(x) str_wrap(x, width = 10)) + facet_wrap(~ Year)
+ggplot(data = leisure_once_year, aes(x = Percentage)) + stat_ecdf(geom = "step")
+ggplot(data = Leisure.data, aes(x = Frequency, y = Percentage)) + geom_point(aes(color = Locality), position = "jitter") + scale_x_discrete(limits = FrequencyLevel, labels = function(x) str_wrap(x, width = 10)) + facet_wrap(~ Year)
+```
+## Statistical Analysis
+All of the following code applies the statistical analyses required for my EDA
+
+```{r}
+leisure_local <- leisure_once_year[leisure_once_year$Locality == "Local", ]
+leisure_remote <- leisure_once_year[leisure_once_year$Locality == "Remote", ]
+t.test(leisure_local$Percentage, leisure_remote$Percentage)
+leisure_corr <- lm(Percentage ~ Activity + Year, leisure_once_year)
+summary(leisure_corr)
+```
+
+
+
+
+
